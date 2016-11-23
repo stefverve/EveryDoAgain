@@ -15,6 +15,9 @@
 		E2476D581DE600A1006EA4F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2476D561DE600A1006EA4F6 /* Main.storyboard */; };
 		E2476D5A1DE600A1006EA4F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2476D591DE600A1006EA4F6 /* Assets.xcassets */; };
 		E2476D5D1DE600A1006EA4F6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2476D5B1DE600A1006EA4F6 /* LaunchScreen.storyboard */; };
+		E2476D6C1DE610AB006EA4F6 /* AddToDoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2476D6B1DE610AB006EA4F6 /* AddToDoViewController.m */; };
+		E2476D6F1DE62BA4006EA4F6 /* TaskViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2476D6E1DE62BA4006EA4F6 /* TaskViewCell.m */; };
+		E2476D721DE659B6006EA4F6 /* BlackUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = E2476D711DE659B6006EA4F6 /* BlackUIView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +34,12 @@
 		E2476D591DE600A1006EA4F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E2476D5C1DE600A1006EA4F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E2476D5E1DE600A1006EA4F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E2476D6A1DE610AB006EA4F6 /* AddToDoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddToDoViewController.h; sourceTree = "<group>"; };
+		E2476D6B1DE610AB006EA4F6 /* AddToDoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddToDoViewController.m; sourceTree = "<group>"; };
+		E2476D6D1DE62BA4006EA4F6 /* TaskViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewCell.h; sourceTree = "<group>"; };
+		E2476D6E1DE62BA4006EA4F6 /* TaskViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewCell.m; sourceTree = "<group>"; };
+		E2476D701DE659B6006EA4F6 /* BlackUIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlackUIView.h; sourceTree = "<group>"; };
+		E2476D711DE659B6006EA4F6 /* BlackUIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlackUIView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +78,12 @@
 				E2476D511DE600A1006EA4F6 /* MasterViewController.m */,
 				E2476D531DE600A1006EA4F6 /* DetailViewController.h */,
 				E2476D541DE600A1006EA4F6 /* DetailViewController.m */,
+				E2476D6A1DE610AB006EA4F6 /* AddToDoViewController.h */,
+				E2476D6B1DE610AB006EA4F6 /* AddToDoViewController.m */,
+				E2476D701DE659B6006EA4F6 /* BlackUIView.h */,
+				E2476D711DE659B6006EA4F6 /* BlackUIView.m */,
+				E2476D6D1DE62BA4006EA4F6 /* TaskViewCell.h */,
+				E2476D6E1DE62BA4006EA4F6 /* TaskViewCell.m */,
 				E2476D561DE600A1006EA4F6 /* Main.storyboard */,
 				E2476D591DE600A1006EA4F6 /* Assets.xcassets */,
 				E2476D5B1DE600A1006EA4F6 /* LaunchScreen.storyboard */,
@@ -159,10 +174,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2476D6C1DE610AB006EA4F6 /* AddToDoViewController.m in Sources */,
 				E2476D551DE600A1006EA4F6 /* DetailViewController.m in Sources */,
 				E2476D521DE600A1006EA4F6 /* MasterViewController.m in Sources */,
 				E2476D4F1DE600A1006EA4F6 /* EveryDoAgain.xcdatamodeld in Sources */,
+				E2476D6F1DE62BA4006EA4F6 /* TaskViewCell.m in Sources */,
 				E2476D4C1DE600A1006EA4F6 /* AppDelegate.m in Sources */,
+				E2476D721DE659B6006EA4F6 /* BlackUIView.m in Sources */,
 				E2476D491DE600A1006EA4F6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,7 +302,7 @@
 				DEVELOPMENT_TEAM = JNQLRNGEA7;
 				INFOPLIST_FILE = EveryDoAgain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = LHL.EveryDoAgain;
+				PRODUCT_BUNDLE_IDENTIFIER = LHL.CoreDataDemo2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -296,7 +314,7 @@
 				DEVELOPMENT_TEAM = JNQLRNGEA7;
 				INFOPLIST_FILE = EveryDoAgain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = LHL.EveryDoAgain;
+				PRODUCT_BUNDLE_IDENTIFIER = LHL.CoreDataDemo2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

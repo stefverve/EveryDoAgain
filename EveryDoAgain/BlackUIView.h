@@ -1,5 +1,5 @@
 //
-//  DetailViewController.h
+//  BlackUIView.h
 //  EveryDoAgain
 //
 //  Created by Stefan Verveniotis on 2016-11-23.
@@ -7,12 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EveryDoAgain+CoreDataModel.h"
 
-@interface DetailViewController : UIViewController
-
-@property (strong, nonatomic) ToDo *detailItem;
-
+@interface BlackUIView : UIView
 
 @end
-

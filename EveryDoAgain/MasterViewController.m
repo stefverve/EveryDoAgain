@@ -8,6 +8,9 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
+#import "AddToDoViewController.h"
+#import "TaskViewCell.h"
+#import "AppDelegate.h"
 
 @interface MasterViewController ()
 
@@ -20,9 +23,12 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
+//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+//    self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    
+    
+   // setHighlighted:animated: and setSelected:animated:
 }
 
 
@@ -38,22 +44,6 @@
 }
 
 
-- (void)insertNewObject:(id)sender {
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    Event *newEvent = [[Event alloc] initWithContext:context];
-        
-    // If appropriate, configure the new managed object.
-    newEvent.timestamp = [NSDate date];
-        
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error]) {
-        // Replace this implementation with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        NSLog(@"Unresolved error %@, %@", error, error.userInfo);
-        abort();
-    }
-}
 
 
 #pragma mark - Segues
@@ -61,11 +51,13 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        Event *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        ToDo *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
         DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
         [controller setDetailItem:object];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
+    } else if ([[segue identifier] isEqualToString:@"newToDo"]) {
+        
     }
 }
 
@@ -83,10 +75,10 @@
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    Event *event = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    [self configureCell:cell withEvent:event];
+- (TaskViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    TaskViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"myCell" forIndexPath:indexPath];
+    ToDo *toDo = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    [self configureCell:cell withToDo:toDo];
     return cell;
 }
 
@@ -112,33 +104,52 @@
     }
 }
 
+- (IBAction)swipeToCompleteGesture:(UISwipeGestureRecognizer *)sender {
+    CGPoint swipeLocation = [sender locationInView:self.tableView];
+    NSIndexPath *swipedIndexPath = [self.tableView indexPathForRowAtPoint:swipeLocation];
+    
+    [self.fetchedResultsController objectAtIndexPath:swipedIndexPath].complete = ![self.fetchedResultsController objectAtIndexPath:swipedIndexPath].complete;//YES;
+    NSManagedObjectContext *context = ((AppDelegate*)[UIApplication sharedApplication].delegate).persistentContainer.viewContext;
+    NSError *error = nil;
+    if (![context save:&error]) {
+        // Replace this implementation with code to handle the error appropriately.
+        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+        NSLog(@"Unresolved error %@, %@", error, error.userInfo);
+        abort();
+    }
+  //  self.todos[swipedIndexPath.row].complete = YES;
+    [self.tableView reloadData];
+}
 
-- (void)configureCell:(UITableViewCell *)cell withEvent:(Event *)event {
-    cell.textLabel.text = event.timestamp.description;
+- (void)configureCell:(TaskViewCell *)cell withToDo:(ToDo *)toDo {
+    cell.taskNameLabel.text = toDo.task;
+    cell.taskDetailLabel.text = toDo.taskDetails;
+    cell.taskPriorityLabel.text = toDo.priority;
+    cell.taskStrikethrough.alpha = toDo.complete;
 }
 
 
 #pragma mark - Fetched results controller
 
-- (NSFetchedResultsController<Event *> *)fetchedResultsController
+- (NSFetchedResultsController<ToDo *> *)fetchedResultsController
 {
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
     }
     
-    NSFetchRequest<Event *> *fetchRequest = Event.fetchRequest;
+    NSFetchRequest<ToDo *> *fetchRequest = ToDo.fetchRequest;
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"task" ascending:NO];
 
     [fetchRequest setSortDescriptors:@[sortDescriptor]];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController<Event *> *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
+    NSFetchedResultsController<ToDo *> *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     aFetchedResultsController.delegate = self;
     
     NSError *error = nil;
@@ -191,7 +202,7 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] withEvent:anObject];
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] withToDo:anObject];
             break;
             
         case NSFetchedResultsChangeMove:
