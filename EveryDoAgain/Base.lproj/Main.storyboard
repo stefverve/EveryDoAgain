@@ -213,13 +213,29 @@
                             <outletCollection property="gestureRecognizers" destination="LWC-fH-ggF" appends="YES" id="NSQ-XZ-7aJ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8">
+                    <navigationItem key="navigationItem" id="Zdf-7t-Un8">
+                        <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="JXM-JN-fcR">
+                            <rect key="frame" x="61" y="7" width="254" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="Title"/>
+                                <segment title="Priority"/>
+                                <segment title="Completion"/>
+                            </segments>
+                            <connections>
+                                <action selector="sortMethodSwitched:" destination="7bK-jq-Zjz" eventType="valueChanged" id="5Sb-M5-hCU"/>
+                            </connections>
+                        </segmentedControl>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="1d8-j3-w85">
                             <connections>
                                 <segue destination="0Ly-w3-nIY" kind="show" identifier="addToDo" id="zpd-IC-Rsw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="sortSelector" destination="JXM-JN-fcR" id="hri-f4-U52"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="right" id="LWC-fH-ggF">

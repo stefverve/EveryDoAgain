@@ -338,6 +338,7 @@
 				E2476D631DE600A1006EA4F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

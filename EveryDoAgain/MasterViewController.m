@@ -14,6 +14,9 @@
 
 @interface MasterViewController ()
 
+@property (weak, nonatomic) IBOutlet UISegmentedControl *sortSelector;
+@property (nonatomic) BOOL isBool;
+
 @end
 
 @implementation MasterViewController
@@ -23,18 +26,14 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-//    self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-    
-    
-   // setHighlighted:animated: and setSelected:animated:
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     self.clearsSelectionOnViewWillAppear = self.splitViewController.isCollapsed;
     [super viewWillAppear:animated];
+    [self.tableView reloadData];
 }
 
 
@@ -56,8 +55,7 @@
         [controller setDetailItem:object];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
-    } else if ([[segue identifier] isEqualToString:@"newToDo"]) {
-        
+//    } else if ([[segue identifier] isEqualToString:@"newToDo"]) {
     }
 }
 
@@ -107,8 +105,9 @@
 - (IBAction)swipeToCompleteGesture:(UISwipeGestureRecognizer *)sender {
     CGPoint swipeLocation = [sender locationInView:self.tableView];
     NSIndexPath *swipedIndexPath = [self.tableView indexPathForRowAtPoint:swipeLocation];
+    ((TaskViewCell *)[self.tableView cellForRowAtIndexPath:swipedIndexPath]).taskStrikethrough.alpha = 1.0; //[self.fetchedResultsController objectAtIndexPath:swipedIndexPath].complete;
     
-    [self.fetchedResultsController objectAtIndexPath:swipedIndexPath].complete = ![self.fetchedResultsController objectAtIndexPath:swipedIndexPath].complete;//YES;
+    [self.fetchedResultsController objectAtIndexPath:swipedIndexPath].complete = YES; //![self.fetchedResultsController objectAtIndexPath:swipedIndexPath].complete;
     NSManagedObjectContext *context = ((AppDelegate*)[UIApplication sharedApplication].delegate).persistentContainer.viewContext;
     NSError *error = nil;
     if (![context save:&error]) {
@@ -117,9 +116,13 @@
         NSLog(@"Unresolved error %@, %@", error, error.userInfo);
         abort();
     }
-  //  self.todos[swipedIndexPath.row].complete = YES;
+}
+
+- (IBAction)sortMethodSwitched:(UISegmentedControl *)sender {
+ //   [self fetchedResultsController];
     [self.tableView reloadData];
 }
+
 
 - (void)configureCell:(TaskViewCell *)cell withToDo:(ToDo *)toDo {
     cell.taskNameLabel.text = toDo.task;
@@ -133,9 +136,9 @@
 
 - (NSFetchedResultsController<ToDo *> *)fetchedResultsController
 {
-    if (_fetchedResultsController != nil) {
-        return _fetchedResultsController;
-    }
+//    if (_fetchedResultsController != nil) {
+//        return _fetchedResultsController;
+//    }
     
     NSFetchRequest<ToDo *> *fetchRequest = ToDo.fetchRequest;
     
@@ -143,9 +146,36 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"task" ascending:NO];
+    NSArray <NSSortDescriptor*> *sortDescriptors = [NSArray new];
+    switch (self.sortSelector.selectedSegmentIndex) {
+        case 0: {
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"task" ascending:YES selector:@selector(caseInsensitiveCompare:)]];
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"priority" ascending:NO]];
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"complete" ascending:NO]];
+            break;
+        }
+        case 1: {
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"priority" ascending:NO]];
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"complete" ascending:NO]];
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"task" ascending:YES selector:@selector(caseInsensitiveCompare:)]];
+            break;
+        }
+        case 2: {
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"complete" ascending:NO]];
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"priority" ascending:NO]];
+            sortDescriptors = [sortDescriptors arrayByAddingObject:[[NSSortDescriptor alloc] initWithKey:@"task" ascending:YES selector:@selector(caseInsensitiveCompare:)]];
+            break;
+        }
+    }
+    
+    
+    
+    
+    
+    
+  //  NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"task" ascending:NO];
 
-    [fetchRequest setSortDescriptors:@[sortDescriptor]];
+    [fetchRequest setSortDescriptors:sortDescriptors];//@[sortDescriptor]];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
